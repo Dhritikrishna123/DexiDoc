@@ -17,13 +17,20 @@ def load_config() -> Dict[str, Any]:
             "logging" : {
                 "level" : "INFO",
                 "file" : str(CONFIG_DIR/ "dexidoc.log")
-            }
+            },
+            "excludes": ['.*', '__pycache__', 'node_modules', '.git', '.venv'],
+            "extensions": ['.pdf', '.txt', '.docx']
         }
     
     try:
         with open(CONFIG_FILE, "rb") as f:
             config = tomli.load(f)
             config["config_path"] = str(CONFIG_FILE) # Inject path for reference
+            
+            # Set defaults for missing keys
+            config.setdefault("excludes", ['.*', '__pycache__', 'node_modules', '.git', '.venv'])
+            config.setdefault("extensions", ['.pdf', '.txt', '.docx'])
+            
             return config
         
     except Exception as e:
